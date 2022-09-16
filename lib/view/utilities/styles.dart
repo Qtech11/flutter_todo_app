@@ -52,3 +52,19 @@ TextStyle hintStyle(height) => GoogleFonts.lato(
         color: kTextColor,
       ),
     );
+
+TextStyle kTileStyle(height) => GoogleFonts.lato(
+      textStyle: TextStyle(
+        fontSize: height / 50,
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+//
+// TextStyle kTileStyle(height) => GoogleFonts.lato(
+//   textStyle: TextStyle(
+//     fontSize: height / 55,
+//     color: Colors.white,
+//     fontWeight: FontWeight.bold,
+//   ),
+// );

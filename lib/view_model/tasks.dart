@@ -32,11 +32,9 @@ class Tasks extends ChangeNotifier {
     getTasks();
   }
 
-  // update task from table
-
   // delete all tasks from table
-  Future<void> deleteAllTasks() async {
-    await DBHelper.deleteAll();
-    getTasks();
-  }
+  // Future<void> deleteAllTasks() async {
+  //   await DBHelper.deleteAll();
+  //   getTasks();
+  // }
 }

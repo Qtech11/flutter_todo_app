@@ -211,7 +211,6 @@ modalBottomSheet({
               title: 'Mark Task as Completed',
               onTap: () {
                 int a = pageMap[category]!.indexOf(taskModel);
-                print(a);
                 if (taskModel.date != DateFormat.yMd().format(DateTime.now())) {
                   ShowSnackBar.showSnackBar(
                     'Not ${taskModel.date} yet',
@@ -219,7 +218,6 @@ modalBottomSheet({
                   );
                 } else {
                   if (a == 0) {
-                    print('b');
                     tasks.updateCompletedStatus(id: taskModel.id);
                   } else {
                     bool bar = true;

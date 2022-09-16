@@ -25,7 +25,7 @@ class CustomButton extends StatelessWidget {
         ),
         child: Text(
           title,
-          style: kTextStyle4(height),
+          style: kTextStyle4(height * 1.05),
         ),
       ),
     );

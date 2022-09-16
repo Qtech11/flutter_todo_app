@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => Tasks(),
       child: MaterialApp(
-        home: HomeScreen(),
+        home: const HomeScreen(),
         debugShowCheckedModeBanner: false,
         scaffoldMessengerKey: messengerKey,
       ),

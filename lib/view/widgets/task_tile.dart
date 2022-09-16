@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_todo_app/view/utilities/color.dart';
 import 'package:flutter_todo_app/view/utilities/styles.dart';
 
@@ -34,24 +33,14 @@ class TaskTile extends StatelessWidget {
               children: [
                 Text(
                   task?.title ?? "",
-                  style: GoogleFonts.lato(
-                    textStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
+                  style: kTileStyle(height),
                 ),
                 const SizedBox(
                   height: 12,
                 ),
                 Text(
                   task?.note ?? "",
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey[100],
-                    ),
-                  ),
+                  style: kTextStyle2(height / 1.5),
                 ),
               ],
             ),

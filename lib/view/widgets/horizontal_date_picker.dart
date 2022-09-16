@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:flutter_todo_app/view/utilities/color.dart';
 import 'package:provider/provider.dart';
 
 import '../../view_model/tasks.dart';
 import '../utilities/styles.dart';
 
+//ignore: must_be_immutable
 class HorizontalDatePicker extends StatelessWidget {
   HorizontalDatePicker({
     Key? key,
@@ -26,9 +28,9 @@ class HorizontalDatePicker extends StatelessWidget {
         height: height / 8,
         width: height / 12,
         initialSelectedDate: _selectedDate,
-        selectionColor: Colors.blue,
+        selectionColor: kBlueColor,
         selectedTextColor: Colors.white,
-        deactivatedColor: Colors.black54,
+        deactivatedColor: Colors.black,
         dateTextStyle: kTextStyle5(height),
         dayTextStyle: kTextStyle5(height),
         monthTextStyle: kTextStyle5(height),
