@@ -9,9 +9,9 @@ import 'package:flutter_todo_app/view/widgets/snack_bar.dart';
 import '../../model/task_model.dart';
 import '../../view_model/tasks.dart';
 
-class AddTaskScreen extends StatelessWidget {
-  AddTaskScreen({Key? key}) : super(key: key);
-  final categoryController = TextEditingController();
+class AddTaskScreenByCategory extends StatelessWidget {
+  AddTaskScreenByCategory({Key? key, required this.category}) : super(key: key);
+  final String category;
   final titleController = TextEditingController();
   final noteController = TextEditingController();
 
@@ -39,15 +39,6 @@ class AddTaskScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CustomTextField(
-                title: 'Category',
-                hintText: 'Enter your task category',
-                controller: categoryController,
-                height: height,
-              ),
-              SizedBox(
-                height: height / 25,
-              ),
               CustomTextField(
                 title: 'Title',
                 hintText: 'Enter your task title',
@@ -88,7 +79,7 @@ class AddTaskScreen extends StatelessWidget {
     task.addTask(
       task: TaskModel(
         note: noteController.text.trim(),
-        category: categoryController.text.trim().toUpperCase(),
+        category: category,
         title: titleController.text.trim(),
         date: DateFormat.yMd().format(task.date),
       ),
@@ -100,7 +91,7 @@ class AddTaskScreen extends StatelessWidget {
   void validateData(context, double height) {
     if (titleController.text.trim().isNotEmpty &&
         noteController.text.trim().isNotEmpty &&
-        categoryController.text.trim().isNotEmpty) {
+        category.isNotEmpty) {
       _addTaskToDB(context);
       Navigator.pop(context);
     } else {

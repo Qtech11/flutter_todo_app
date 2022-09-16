@@ -1,5 +1,6 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/view/screen/add_task_by_category_screen.dart';
 import 'package:flutter_todo_app/view/widgets/snack_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_todo_app/model/task_model.dart';
@@ -24,7 +25,6 @@ class HomeScreen extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     List<TaskModel> pageList = [];
     Map<String, List<TaskModel>> pageMap = {};
-
     void pageAlgorithm() {
       for (int index = 0; index < taskList.length; index++) {
         if (taskList[index].date == DateFormat.yMd().format(tasks.date)) {
@@ -41,6 +41,8 @@ class HomeScreen extends StatelessWidget {
         }
       }
     }
+
+    pageAlgorithm();
 
     return Scaffold(
       backgroundColor: kBackgroundColor,
@@ -93,71 +95,94 @@ class HomeScreen extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               itemBuilder: (context, index) {
-                pageAlgorithm();
-                return GestureDetector(
-                  onTap: () {
-                    modalBottomSheet(
-                      context: context,
-                      isCompleted: taskList[index].isCompleted,
-                      tasks: tasks,
-                      taskModel: taskList[index],
-                      height: height,
-                      pageList: pageList,
-                    );
-                  },
-                  child: ExpandablePanel(
-                    collapsed: ExpandableButton(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: width * 0.02,
-                          vertical: width * 0.02,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'category: ${taskList[index].category.toUpperCase()}',
-                              style: kTextStyle1(height),
-                            ),
-                            Icon(
-                              Icons.expand_more,
-                              size: height / 30,
-                            ),
-                          ],
-                        ),
+                return ExpandablePanel(
+                  collapsed: ExpandableButton(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: width * 0.02,
+                        vertical: width * 0.02,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'category: ${pageMap.keys.elementAt(index)}',
+                            style: kTextStyle1(height),
+                          ),
+                          Icon(
+                            Icons.expand_more,
+                            size: height / 30,
+                          ),
+                        ],
                       ),
                     ),
-                    expanded: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ExpandableButton(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: width * 0.02,
-                              vertical: width * 0.02,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'category: ${taskList[index].category.toUpperCase()}',
-                                  style: kTextStyle1(height),
-                                ),
-                                Icon(
-                                  Icons.expand_less,
-                                  size: height / 30,
-                                ),
-                              ],
-                            ),
+                  ),
+                  expanded: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ExpandableButton(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.02,
+                            vertical: width * 0.02,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'category: ${pageMap.keys.elementAt(index)}',
+                                style: kTextStyle1(height),
+                              ),
+                              Icon(
+                                Icons.expand_less,
+                                size: height / 30,
+                              ),
+                            ],
                           ),
                         ),
-                        TaskTile(task: taskList[index]),
-                      ],
-                    ),
+                      ),
+                      for (int i = 0;
+                          i < pageMap[pageMap.keys.elementAt(index)]!.length;
+                          i++)
+                        GestureDetector(
+                          onTap: () {
+                            modalBottomSheet(
+                              context: context,
+                              category:
+                                  pageMap[pageMap.keys.elementAt(index)]![i]
+                                      .category,
+                              tasks: tasks,
+                              taskModel:
+                                  pageMap[pageMap.keys.elementAt(index)]![i],
+                              height: height,
+                              pageMap: pageMap,
+                            );
+                          },
+                          child: TaskTile(
+                              task: pageMap[pageMap.keys.elementAt(index)]![i]),
+                        ),
+                      Center(
+                        child: CustomButton(
+                          title: '+  Add task to this category',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddTaskScreenByCategory(
+                                    category: pageMap.keys.elementAt(index)),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: height / 30,
+                      )
+                    ],
                   ),
                 );
               },
-              itemCount: taskList.length,
+              itemCount: pageMap.length,
             ),
           ),
         ],
@@ -168,9 +193,9 @@ class HomeScreen extends StatelessWidget {
 
 modalBottomSheet({
   required context,
-  required int? isCompleted,
+  required String category,
   required Tasks tasks,
-  required List<TaskModel> pageList,
+  required Map<String, List<TaskModel>> pageMap,
   required TaskModel taskModel,
   required double height,
 }) {
@@ -185,23 +210,32 @@ modalBottomSheet({
             CustomButton1(
               title: 'Mark Task as Completed',
               onTap: () {
-                int a = pageList.indexOf(taskModel);
-                if (a == 0) {
-                  tasks.updateCompletedStatus(id: taskModel.id);
+                int a = pageMap[category]!.indexOf(taskModel);
+                print(a);
+                if (taskModel.date != DateFormat.yMd().format(DateTime.now())) {
+                  ShowSnackBar.showSnackBar(
+                    'Not ${taskModel.date} yet',
+                    height,
+                  );
                 } else {
-                  bool bar = true;
-                  for (int i = 0; i < a; i++) {
-                    if (pageList[i].isCompleted == 0) {
-                      bar = false;
-                      ShowSnackBar.showSnackBar(
-                        'You have to complete previous task(s) in this category',
-                        height,
-                      );
-                      break;
-                    }
-                  }
-                  if (bar == true) {
+                  if (a == 0) {
+                    print('b');
                     tasks.updateCompletedStatus(id: taskModel.id);
+                  } else {
+                    bool bar = true;
+                    for (int i = 0; i < a; i++) {
+                      if (pageMap[category]![i].isCompleted == 0) {
+                        bar = false;
+                        ShowSnackBar.showSnackBar(
+                          'You have to complete previous task(s) in this category',
+                          height,
+                        );
+                        break;
+                      }
+                    }
+                    if (bar == true) {
+                      tasks.updateCompletedStatus(id: taskModel.id);
+                    }
                   }
                 }
 
