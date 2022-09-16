@@ -19,9 +19,11 @@ class ShowSnackBar {
               SizedBox(
                 width: height / 45,
               ),
-              Text(
-                message,
-                style: kTextStyle4(height),
+              Flexible(
+                child: Text(
+                  message,
+                  style: kTextStyle4(height),
+                ),
               ),
             ],
           ),
