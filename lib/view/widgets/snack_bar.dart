@@ -16,6 +16,9 @@ class ShowSnackBar {
                 Icons.error,
                 color: Colors.white,
               ),
+              SizedBox(
+                width: height / 45,
+              ),
               Text(
                 message,
                 style: kTextStyle4(height),
@@ -23,7 +26,7 @@ class ShowSnackBar {
             ],
           ),
           behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 4),
+          duration: const Duration(seconds: 3),
         ),
       );
   }

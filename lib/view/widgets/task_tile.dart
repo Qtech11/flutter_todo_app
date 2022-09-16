@@ -32,15 +32,15 @@ class TaskTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  task?.title ?? "",
+                  task?.title.toUpperCase() ?? "",
                   style: kTileStyle(height),
                 ),
-                const SizedBox(
-                  height: 12,
+                SizedBox(
+                  height: height / 40,
                 ),
                 Text(
                   task?.note ?? "",
-                  style: kTextStyle2(height / 1.5),
+                  style: kTileStyle1(height),
                 ),
               ],
             ),

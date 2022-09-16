@@ -1,5 +1,6 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_todo_app/view/screen/add_task_by_category_screen.dart';
 import 'package:flutter_todo_app/view/widgets/snack_bar.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +15,21 @@ import 'package:flutter_todo_app/view/widgets/task_tile.dart';
 import '../../view_model/tasks.dart';
 import '../utilities/color.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Provider.of<Tasks>(context, listen: false).getTasks();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
