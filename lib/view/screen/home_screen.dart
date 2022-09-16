@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/view/widgets/snack_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_todo_app/model/task_model.dart';
 import 'package:flutter_todo_app/view/screen/add_task_screen.dart';
@@ -20,7 +21,8 @@ class HomeScreen extends StatelessWidget {
     List<TaskModel> taskList = tasks.taskList;
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    Map<int?, dynamic> map = {};
+    List<TaskModel> pageList = [];
+
     return Scaffold(
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
@@ -74,7 +76,8 @@ class HomeScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 if (taskList[index].date ==
                     DateFormat.yMd().format(tasks.date)) {
-                  map[taskList[index].id] = taskList[index];
+                  pageList.add(taskList[index]);
+
                   return GestureDetector(
                     onTap: () {
                       modalBottomSheet(
@@ -83,6 +86,7 @@ class HomeScreen extends StatelessWidget {
                         tasks: tasks,
                         taskModel: taskList[index],
                         height: height,
+                        pageList: pageList,
                       );
                     },
                     child: TaskTile(task: taskList[index]),
@@ -104,6 +108,7 @@ modalBottomSheet({
   required context,
   required int? isCompleted,
   required Tasks tasks,
+  required List<TaskModel> pageList,
   required TaskModel taskModel,
   required double height,
 }) {
@@ -118,7 +123,26 @@ modalBottomSheet({
             CustomButton1(
               title: 'Mark Task as Completed',
               onTap: () {
-                tasks.updateCompletedStatus(id: taskModel.id);
+                int a = pageList.indexOf(taskModel);
+                if (a == 0) {
+                  tasks.updateCompletedStatus(id: taskModel.id);
+                } else {
+                  bool bar = true;
+                  for (int i = 0; i < a; i++) {
+                    if (pageList[i].isCompleted == 0) {
+                      bar = false;
+                      ShowSnackBar.showSnackBar(
+                        'You have to complete previous task(s) in this category',
+                        height,
+                      );
+                      break;
+                    }
+                  }
+                  if (bar == true) {
+                    tasks.updateCompletedStatus(id: taskModel.id);
+                  }
+                }
+
                 Navigator.pop(context);
               },
               color: kBlueColor,
