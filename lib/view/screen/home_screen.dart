@@ -1,3 +1,4 @@
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/view/widgets/snack_bar.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,24 @@ class HomeScreen extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     List<TaskModel> pageList = [];
+    Map<String, List<TaskModel>> pageMap = {};
+
+    void pageAlgorithm() {
+      for (int index = 0; index < taskList.length; index++) {
+        if (taskList[index].date == DateFormat.yMd().format(tasks.date)) {
+          pageList.add(taskList[index]);
+
+          String key = taskList[index].category;
+          if (pageMap.containsKey(key)) {
+            List<TaskModel>? c = pageMap[key];
+            c!.add(taskList[index]);
+            pageMap[key] = c;
+          } else {
+            pageMap[key] = [taskList[index]];
+          }
+        }
+      }
+    }
 
     return Scaffold(
       backgroundColor: kBackgroundColor,
@@ -74,26 +93,69 @@ class HomeScreen extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               itemBuilder: (context, index) {
-                if (taskList[index].date ==
-                    DateFormat.yMd().format(tasks.date)) {
-                  pageList.add(taskList[index]);
-
-                  return GestureDetector(
-                    onTap: () {
-                      modalBottomSheet(
-                        context: context,
-                        isCompleted: taskList[index].isCompleted,
-                        tasks: tasks,
-                        taskModel: taskList[index],
-                        height: height,
-                        pageList: pageList,
-                      );
-                    },
-                    child: TaskTile(task: taskList[index]),
-                  );
-                } else {
-                  return Container();
-                }
+                pageAlgorithm();
+                return GestureDetector(
+                  onTap: () {
+                    modalBottomSheet(
+                      context: context,
+                      isCompleted: taskList[index].isCompleted,
+                      tasks: tasks,
+                      taskModel: taskList[index],
+                      height: height,
+                      pageList: pageList,
+                    );
+                  },
+                  child: ExpandablePanel(
+                    collapsed: ExpandableButton(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: width * 0.02,
+                          vertical: width * 0.02,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'category: ${taskList[index].category.toUpperCase()}',
+                              style: kTextStyle1(height),
+                            ),
+                            Icon(
+                              Icons.expand_more,
+                              size: height / 30,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    expanded: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ExpandableButton(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: width * 0.02,
+                              vertical: width * 0.02,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'category: ${taskList[index].category.toUpperCase()}',
+                                  style: kTextStyle1(height),
+                                ),
+                                Icon(
+                                  Icons.expand_less,
+                                  size: height / 30,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        TaskTile(task: taskList[index]),
+                      ],
+                    ),
+                  ),
+                );
               },
               itemCount: taskList.length,
             ),
