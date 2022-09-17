@@ -10,8 +10,10 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    double height1 = MediaQuery.of(context).size.height;
+    double width1 = MediaQuery.of(context).size.width;
+    double height = height1 > width1 ? height1 : width1;
+    double width = height1 > width1 ? width1 : height1;
     return Container(
       margin: EdgeInsets.only(
         bottom: width * 0.02,

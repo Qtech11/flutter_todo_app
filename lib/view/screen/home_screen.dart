@@ -35,8 +35,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     Tasks tasks = Provider.of<Tasks>(context);
     List<TaskModel> taskList = tasks.taskList;
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    double height1 = MediaQuery.of(context).size.height;
+    double width1 = MediaQuery.of(context).size.width;
+    double height = height1 > width1 ? height1 : width1;
+    double width = height1 > width1 ? width1 : height1;
     List<TaskModel> pageList = [];
     Map<String, List<TaskModel>> pageMap = {};
     void pageAlgorithm() {
@@ -83,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       DateFormat.yMMMMd().format(
                         DateTime.now(),
                       ),
-                      style: kTextStyle2(height),
+                      style: kTextStyle2(height / 1.05),
                     ),
                     Text(
                       "Today",
